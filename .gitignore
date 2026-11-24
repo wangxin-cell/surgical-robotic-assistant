@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+episodes/
+results/
+predictions/
+runs/
+datasets/
+weights/
+.ultralytics/
+.matplotlib/
+*arm-diagnostics.jsonl
+!examples/diagnostics/*arm-diagnostics.jsonl

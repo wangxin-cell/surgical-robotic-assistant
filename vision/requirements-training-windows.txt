@@ -1,0 +1,36 @@
+certifi==2026.10.23
+charset-normalizer==3.5.2
+contourpy==1.4.0
+cycler==0.12.1
+filelock==4.2.9
+fonttools==4.68.0
+fsspec==2026.9.0
+idna==3.20
+Jinja2==3.1.6
+kiwisolver==1.5.1
+MarkupSafe==3.0.4
+matplotlib==3.11.2
+mpmath==1.3.0
+networkx==3.7
+numpy==2.5.4
+opencv-python==5.0.0.93
+packaging==26.3
+pillow==13.0.0
+pip==25.3
+polars==2.1.0
+polars-runtime-32==2.1.0
+psutil==7.2.2
+pyparsing==3.3.3
+python-dateutil==4.0.0
+PyYAML==6.0.3
+requests==2.34.2
+scipy==1.18.1
+setuptools==84.2.1
+sympy==1.14.0
+torch @ https://download.pytorch.org/whl/cu128/torch-2.10.0%2Bcu128-cp313-cp313-win_amd64.whl#sha256=4d1b0b49c54223c7c04050b49eac141d77b6edbc34aea1dfc74a6fdb661baa8c
+torchvision @ https://download.pytorch.org/whl/cu128/torchvision-0.25.0%2Bcu128-cp313-cp313-win_amd64.whl#sha256=e2e0317e3861bba1b5aeba7c1cb4bcd50937cf0bffdbea478619d1f5f73e9050
+typing_extensions==4.16.0
+tzdata==2026.6
+ultralytics==8.4.0
+ultralytics-thop==2.2.5
+urllib3==2.8.0
