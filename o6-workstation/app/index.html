@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>O6 工作台</title><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/arms.css"></head>
+<body><header class="top"><div class="brand"><img src="/favicon.svg" width="35" height="35" alt=""><span>O6 工作台</span></div><div class="connections"><span id="voiceState" class="connection"><i></i>语音连接中</span><span id="cameraState" class="connection"><i></i>视觉连接中</span></div></header>
+<nav class="workspace-nav" aria-label="工作区">
+  <a href="#vision" id="navVision" aria-current="page">器具调取</a>
+  <a href="#arms" id="navArms">机械臂示教</a>
+</nav>
+<main id="visionPage"><div class="page-head"><div><h1>器具调取</h1><p>说出器具名称，查找它所在的点位并调用左臂夹取。</p></div></div>
+<div class="grid"><section class="card camera"><div class="card-head"><h2>工作台画面</h2><button id="refresh" type="button" class="text-btn"><span aria-hidden="true">↻</span> 重新拍摄</button></div>
+<div class="views" role="group" aria-label="镜头选择"><button data-role="head" aria-pressed="true">头部</button><button data-role="right_wrist" aria-pressed="false">右腕</button><button data-role="left_wrist" aria-pressed="false">左腕</button></div>
+<div class="viewer" id="viewer"><img id="cameraImage" alt="工作台实拍画面" hidden><p id="noImage">等候相机画面</p><span id="viewBadge" class="view-badge" hidden></span><a id="openImage" class="expand" aria-label="打开原图" title="打开原图" target="_blank" rel="noopener" hidden>⤢</a></div>
+<div class="camera-meta"><span id="timeLabel">尚未采集</span><span id="objCount"></span></div>
+<p id="exposureNote" class="exposure-note" hidden></p>
+<div id="objects" class="objects"></div></section>
+<section class="card voice"><div class="card-head"><h2>语音请求</h2><span class="small-label" id="backend"></span></div>
+<div class="response" aria-live="polite" aria-atomic="true"><span class="stage" id="stage">准备就绪</span><h3 id="headline">等待语音</h3><p id="detail">试说「拿直剪」或「拿组织镊」。</p><div id="outcomes"></div><small id="heard" class="small-label" hidden></small></div>
+<div class="controls"><button class="speak" type="button" id="speak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5.8 11.5a6.2 6.2 0 0 0 12.4 0M12 18v3.2m-3.8 0h7.6"/></svg><span>开始说话</span></button>
+<p class="hint">也可按住 <kbd>空格</kbd> 说话，松开发送</p>
+<div class="mic-input"><label for="micDevice">麦克风</label><select id="micDevice"><option value="__auto__">自动选择麦克风</option><option value="">系统默认麦克风</option></select></div>
+<div id="micMonitor" class="mic-monitor" hidden><label for="micLevel">输入音量</label><meter id="micLevel" min="0" max="100" value="0"></meter></div>
+<div class="manual"><label for="target">手动查找</label><select id="target"><option value="">选择器具…</option></select></div></div></section></div>
+<section class="card pick-panel" aria-labelledby="pickTitle">
+  <div class="card-head"><h2 id="pickTitle">左臂点位夹取</h2><button id="pickCalibrate" class="text-btn" type="button" disabled>标记四个点位</button></div>
+  <div class="pick-controls"><div role="status"><strong id="pickSummary">正在连接夹取服务</strong><p id="pickDetail" class="pick-detail"></p></div>
+    <button type="button" class="outlined" id="pickOrigin" hidden>仅到点位起姿</button>
+    <button type="button" class="pick-go" id="pickResume" hidden>继续上次路径</button>
+    <button type="button" class="pick-go" id="pickStart" disabled>夹取</button></div>
+  <label class="pick-auto"><input type="checkbox" id="pickAuto" autocomplete="off" aria-describedby="pickMotionNote" disabled>语音识别后自动夹取</label>
+  <p id="pickMotionNote" class="pick-detail">手动摆到录制起姿并启用保持后，勾选「语音识别后自动夹取」。说出器具名称，识别到唯一点位即回放对应路径，到文件终点停住。</p>
+  <div class="pick-slot-control"><label for="pickSlot">按点位取件</label>
+    <select id="pickSlot" class="outlined" disabled><option value="">选择点位…</option><option value="1">点位 1</option><option value="2">点位 2</option><option value="3">点位 3</option><option value="4">点位 4</option></select>
+    <button id="pickViewSlot" class="outlined" type="button" disabled>查看点位</button>
+    <button id="pickHome" class="outlined" type="button" disabled>仅回公共 HOME</button></div>
+  <div class="origin-scroll">
+    <table id="recordedPoses" class="origin-table">
+      <caption>手动复位 · 四条路径的录制起姿（编码器格）</caption>
+      <thead><tr><th scope="col">左臂点位</th><th scope="col">ID1 肩旋</th><th scope="col">ID2 肩升</th><th scope="col">ID3 肘</th><th scope="col">ID4 腕弯</th><th scope="col">ID5 腕旋</th><th scope="col">ID6 夹爪</th></tr></thead>
+      <tbody id="poseRows"><tr><td colspan="7">正在读取 O6 路径文件…</td></tr></tbody>
+    </table>
+  </div>
+  <details id="originPanel"><summary>六轴目标对照</summary>
+    <div class="origin-toolbar"><label for="originSlot">参考姿态</label>
+      <select id="originSlot" class="outlined"><option value="">跟随当前点位</option><option value="home">公共复位</option><option value="1">点位 1 起姿</option><option value="2">点位 2 起姿</option><option value="3">点位 3 起姿</option><option value="4">点位 4 起姿</option></select>
+      <span id="originSource"></span></div>
+    <p id="originNote" role="status">等待实机读数。</p>
+    <div class="origin-scroll"><table class="origin-table"><thead><tr><th scope="col">左臂关节</th><th scope="col">实测</th><th scope="col">目标</th><th scope="col">实测 − 目标</th><th scope="col">硬限</th></tr></thead><tbody id="originBody"></tbody></table></div>
+    <p class="pick-detail">单位为编码器格。夹取前可在这里对照当前读数与录制起姿。</p>
+  </details>
+</section>
+<section class="card history"><div class="card-head"><h2>本次查询记录</h2><span id="historyCount" class="small-label"></span></div><p id="historyEmpty" class="empty">查询结果会显示在这里。</p><ol id="historyList"></ol></section>
+<div id="systemNote" role="status"></div></main>
+<main id="armPage" hidden>
+  <div class="page-head">
+    <div><h1>机械臂示教</h1><p>连接 O6 上的控制板，读取六个关节。启用保持后，可逐轴点动并记录操作。</p></div>
+    <div class="arm-head-actions"><button type="button" class="outlined" id="armSpeak">语音查找器具</button>
+    <div class="arm-switch" role="group" aria-label="选择手臂">
+      <button type="button" data-arm="left" aria-pressed="true">左臂</button>
+      <button type="button" data-arm="right" aria-pressed="false">右臂</button>
+    </div></div>
+  </div>
+  <section class="card arm-query" id="armQuery" hidden aria-labelledby="armQueryTitle">
+    <img id="armQueryPhoto" alt="本次查询的头部相机画面" hidden>
+    <div><h2 id="armQueryTitle">本次器具查询</h2><strong id="armQueryOutcome"></strong><p id="armQueryDetail"></p></div>
+    <a href="#vision">查看器具画面</a>
+  </section>
+  <div class="arm-layout">
+    <section class="card arm-card trace-card" aria-labelledby="traceTitle">
+      <div class="card-head"><h2 id="traceTitle">历史轨迹预览</h2><button type="button" id="reloadEpisodes" class="text-btn">刷新记录</button></div>
+      <label class="trajectory-select" for="trajectory">选择记录 <select id="trajectory" disabled><option>正在读取…</option></select></label>
+      <p id="traceMeta" class="trace-meta" role="status"></p>
+      <div id="traceEmpty" class="plot-empty" role="status">正在读取示教记录…</div>
+      <div id="traceBody" hidden>
+        <div class="plot-panel">
+          <div class="plot-top"><span>关节位置 · 编码器格</span><span id="plotTime"></span></div>
+          <canvas id="traceGraph" height="190" role="img" aria-label="六个关节的历史位置随时间变化，下方为当前帧各关节数值"></canvas>
+          <div id="traceLegend" class="trace-legend"></div>
+        </div>
+        <div class="transport">
+          <button type="button" id="tracePlay" class="arm-primary">播放预览</button>
+          <input id="traceSeek" type="range" min="0" max="0" step="0.1" value="0" aria-label="轨迹预览时间">
+          <output id="traceClock" for="traceSeek"></output>
+        </div>
+        <div id="tracePhases" class="trace-phases" aria-label="跳转到示教阶段"></div>
+      </div>
+    </section>
+    <section class="card arm-card control-card" aria-labelledby="controlTitle">
+      <div class="card-head"><h2 id="controlTitle">左臂控制</h2><span class="arm-state" id="armState">读取中</span></div>
+      <div class="arm-launch">
+        <button type="button" id="openHardware" class="arm-primary" disabled>连接实机</button>
+        <button type="button" id="openSimulation" class="arm-secondary" disabled>模拟示教</button>
+        <button type="button" id="closeArm" class="arm-secondary" hidden disabled>结束示教</button>
+      </div>
+      <p id="armStatusNote" class="arm-note" role="status">正在读取 O6 控制板状态…</p>
+      <div id="teachControls" hidden>
+        <label class="support-choice"><input type="checkbox" id="armSupport" autocomplete="off">臂身已有独立支撑，手已离开运动范围</label>
+        <div class="teach-tools">
+          <button type="button" class="arm-primary" id="armHold" disabled>启用保持</button>
+          <button type="button" class="arm-secondary" id="armRelease" disabled>支撑后释放</button>
+          <label for="armStep">点动步长</label>
+          <select id="armStep" class="outlined"><option value="8">8 格</option><option value="16">16 格</option><option value="24">24 格</option></select>
+        </div>
+      </div>
+      <div class="joint-head"><h3 id="jointTitle">关节读数</h3><span id="jointTime"></span></div>
+      <table class="joint-table"><caption class="arm-sr">所选机械臂的六关节编码器读数，单位为格</caption>
+        <thead><tr><th scope="col">关节</th><th scope="col">位置</th><th scope="col">目标</th><th scope="col">力矩</th><th scope="col">点动</th></tr></thead>
+        <tbody id="jointRows"></tbody>
+      </table>
+      <div id="armFlags" class="arm-note"></div>
+      <div id="recordTools" class="teach-tools" hidden>
+        <button type="button" id="startRecord" class="arm-secondary" disabled>开始记录</button>
+        <button type="button" id="stopRecord" class="arm-secondary" disabled>保存记录</button>
+      </div>
+    </section>
+  </div>
+</main>
+<aside id="pickLive" aria-label="左臂实机动作进度" hidden>
+  <div><strong id="pickLiveTitle"></strong><p id="pickLiveDetail"></p><progress id="pickProgress" max="1" aria-label="轨迹回放进度"></progress></div>
+  <button type="button" id="pickStop">停止夹取</button>
+</aside>
+<dialog id="pickDialog" aria-labelledby="pickDialogTitle">
+  <div class="card-head"><h2 id="pickDialogTitle">标记四个夹取点位</h2><button type="button" id="pickClose" class="outlined" autofocus>关闭</button></div>
+  <p class="pick-instructions">按示教时的方向摆好器具，从左到右点击每件器具检测框的中心。相机、工作台或底盘移动后，请重新标记。</p>
+  <div id="pickFrame" hidden><canvas id="pickCanvas" tabindex="0" aria-label="头部相机原图，用方向键移动标记，回车确定点位"></canvas></div>
+  <p id="pickCalNote" role="status"></p>
+  <div class="pick-dialog-actions"><button id="pickUndo" type="button" class="outlined" disabled>撤回上一点</button><button id="pickSave" type="button" class="pick-go" disabled>保存四个点位</button></div>
+</dialog>
+<script type="module" src="/app.js"></script></body></html>

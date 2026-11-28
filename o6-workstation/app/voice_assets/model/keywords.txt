@@ -1,0 +1,16 @@
+zh í j iǎn @straight_mayo_scissor
+zh í t óu sh ǒu sh ù j iǎn @straight_mayo_scissor
+z ǔ zh ī n iè @tissue_forceps
+zh ǐ x uè q ián @hemostat
+s ān h ào d āo b ǐng p èi sh í h ào d āo p iàn @scalpel_handle_3_blade_10
+s ān h ào d āo b ǐng j iā sh í h ào d āo p iàn @scalpel_handle_3_blade_10
+s ān h ào d āo b ǐng sh í h ào d āo p iàn @scalpel_handle_3_blade_10
+s ān h ào d āo b ǐng p èi sh í y ī h ào d āo p iàn @scalpel_handle_3_blade_11
+s ān h ào d āo b ǐng j iā sh í y ī h ào d āo p iàn @scalpel_handle_3_blade_11
+s ān h ào d āo b ǐng sh í y ī h ào d āo p iàn @scalpel_handle_3_blade_11
+s ān h ào d āo b ǐng p èi sh í w ǔ h ào d āo p iàn @scalpel_handle_3_blade_15
+s ān h ào d āo b ǐng j iā sh í w ǔ h ào d āo p iàn @scalpel_handle_3_blade_15
+s ān h ào d āo b ǐng sh í w ǔ h ào d āo p iàn @scalpel_handle_3_blade_15
+s ì h ào d āo b ǐng p èi èr sh í h ào d āo p iàn @scalpel_handle_4_blade_20
+s ì h ào d āo b ǐng j iā èr sh í h ào d āo p iàn @scalpel_handle_4_blade_20
+s ì h ào d āo b ǐng èr sh í h ào d āo p iàn @scalpel_handle_4_blade_20

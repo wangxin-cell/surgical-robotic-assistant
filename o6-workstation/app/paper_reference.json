@@ -1,0 +1,68 @@
+{
+  "note": "Four reviewed paper dots for fitting, then one independently identified, partially visible check dot. Full-resolution image pixels. No object labels. Valid for this physical USB mapping and stationary camera setup.",
+  "reference_folder": "reference",
+  "roles": {
+    "head": {
+      "device_by_path": "/dev/v4l/by-path/platform-xhci-hcd.6.auto-usb-0:1.3:1.0-video-index0",
+      "size_wh": [
+        1920,
+        1080
+      ],
+      "reference_image": "camera_1.jpg",
+      "sha256": "6e4b3f07cba64b86b04ae88e19ec2ffb1241289f327ba8dfe51f5d8d57a5cad5",
+      "points_xy": [
+        [
+          957.02,
+          600.44
+        ],
+        [
+          1048.87,
+          600.11
+        ],
+        [
+          953.16,
+          650.28
+        ],
+        [
+          1051.89,
+          651.11
+        ],
+        [
+          959.39,
+          555.24
+        ]
+      ]
+    },
+    "right_wrist": {
+      "device_by_path": "/dev/v4l/by-path/platform-xhci-hcd.6.auto-usb-0:1.4:1.0-video-index0",
+      "size_wh": [
+        640,
+        480
+      ],
+      "reference_image": "camera_3.jpg",
+      "sha256": "5862d2102f492c64fcc4a8b96c85ba8853992ef13b7b74010dbc44b8a1c0b69f",
+      "points_xy": [
+        [
+          75.6,
+          277.02
+        ],
+        [
+          184.31,
+          289.94
+        ],
+        [
+          11.81,
+          329.84
+        ],
+        [
+          136.09,
+          349.9
+        ],
+        [
+          120.9,
+          237.95
+        ]
+      ]
+    }
+  }
+}
